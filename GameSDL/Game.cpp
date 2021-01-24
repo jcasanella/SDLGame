@@ -41,7 +41,25 @@ void Game::RunLoop()
 
 void Game::ProcessInput()
 {
+	SDL_Event event;
 
+	// While events to process...
+	while (SDL_PollEvent(&event)) 
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			m_isRunning = false;
+			break;
+		}
+	}
+
+	// Check if Esc pressed
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	if (state[SDL_SCANCODE_ESCAPE])
+	{
+		m_isRunning = false;
+	}
 }
 
 void Game::UpdateGame()
