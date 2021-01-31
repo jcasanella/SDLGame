@@ -16,5 +16,6 @@ private:
 	void GenerateOutput();
 
 	SDL_Window* m_pWindow;
+	SDL_Renderer* m_pRenderer;
 	bool m_isRunning;
 };

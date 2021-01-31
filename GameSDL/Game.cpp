@@ -1,9 +1,10 @@
 #include "Game.h"
 
-Game::Game()
+const int THICKNESS = 15;
+
+Game::Game(): m_pWindow(nullptr), m_pRenderer(nullptr), m_isRunning(true)
 {
-	m_pWindow = NULL;
-	m_isRunning = true;
+
 }
 
 bool Game::Initialize()
@@ -21,11 +22,18 @@ bool Game::Initialize()
 		return false;
 	}
 
+	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!m_pRenderer) {
+		SDL_Log("Failed to create Renderer: %s", SDL_GetError());
+		return false;
+	}
+
 	return true;
 }
 
 void Game::Shutdown()
 {
+	SDL_DestroyRenderer(m_pRenderer);
 	SDL_DestroyWindow(m_pWindow);
 	SDL_Quit();
 }
@@ -69,5 +77,37 @@ void Game::UpdateGame()
 
 void Game::GenerateOutput()
 {
+	// Clear the back buffer 
+	SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 255, 255);
+	SDL_RenderClear(m_pRenderer);
 
+	SDL_SetRenderDrawColor(m_pRenderer, 255, 255, 255, 255);
+
+	// Build rectangle to draw
+	// top rectangle
+	SDL_Rect top_wall;
+	top_wall.x = 0;
+	top_wall.y = 0;
+	top_wall.w = 1024;
+	top_wall.h = THICKNESS;
+	SDL_RenderFillRect(m_pRenderer, &top_wall);
+
+	// bottom rectangle
+	SDL_Rect bottom_wall;
+	bottom_wall.x = 0;
+	bottom_wall.y = 768 - THICKNESS;
+	bottom_wall.w = 1024;
+	bottom_wall.h = THICKNESS;
+	SDL_RenderFillRect(m_pRenderer, &bottom_wall);
+
+	// right wall
+	SDL_Rect right_wall;
+	right_wall.x = 1024 - THICKNESS;
+	right_wall.y = 0;
+	right_wall.w = THICKNESS;
+	right_wall.h = 1024;
+	SDL_RenderFillRect(m_pRenderer, &right_wall);
+
+	// swap back buffer to front buffer
+	SDL_RenderPresent(m_pRenderer);
 }
