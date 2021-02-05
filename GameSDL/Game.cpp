@@ -1,10 +1,12 @@
 #include "Game.h"
 
 const int THICKNESS = 15;
+const int HALF_THICKNESS = THICKNESS / 2;
 
 Game::Game(): m_pWindow(nullptr), m_pRenderer(nullptr), m_isRunning(true)
 {
-
+	m_ballPos = { 1024 / 2, 768 / 2 };
+	m_paddlePos = { 10.0f, 768 / 2 };
 }
 
 bool Game::Initialize()
@@ -107,6 +109,16 @@ void Game::GenerateOutput()
 	right_wall.w = THICKNESS;
 	right_wall.h = 1024;
 	SDL_RenderFillRect(m_pRenderer, &right_wall);
+
+	// draw ball
+	SDL_Rect ball{
+		static_cast<int>(m_ballPos.x - HALF_THICKNESS),
+		static_cast<int>(m_ballPos.y - HALF_THICKNESS),
+		THICKNESS,
+		THICKNESS
+	};
+	SDL_RenderFillRect(m_pRenderer, &ball);
+
 
 	// swap back buffer to front buffer
 	SDL_RenderPresent(m_pRenderer);
